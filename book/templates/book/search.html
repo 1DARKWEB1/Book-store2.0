@@ -1,0 +1,136 @@
+{% extends 'book/index.html'%}
+
+{% block body %}
+<style>
+    input {
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+</style>
+
+
+
+<div class="modal fade" id="staticBack" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Добавить книгу</h5>
+        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form method="post" action="{% url 'add_graph' %}">
+              {% csrf_token %}
+              <label for="title">Название книг:</label>
+              <input type="text" name="title" required><br>
+
+              <label for="authors">Автор:</label>
+              <input type="text" name="authors" required><br>
+
+              <label for="language_code">Язык:</label>
+              <input type="text" name="language_code" required><br>
+
+              <label for="average_rating">Средний рейтинг:</label>
+              <input type="number" name="average_rating" step="0.01"><br>
+
+              <label for="num_pages">Количество страниц:</label>
+              <input type="number" name="num_pages" required><br>
+
+              <label for="ratings_count">Количество оценок:</label>
+              <input type="number" name="ratings_count" required><br>
+
+              <label for="text_reviews_count">Количество отзывов:</label>
+              <input type="number" name="text_reviews_count" required><br>
+
+              <label for="publication_date">Дата публикации:</label>
+              <input type="date" name="publication_date"><br><br>
+
+              <button type="submit" class="btn btn-success">Добавить</button>
+</form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--&lt;!&ndash; myapp/templates/search_results.html &ndash;&gt;-->
+<!--<center>-->
+<!--    <div style="width: 50%;" class=" p-3 bg-grey rounded">-->
+<!--        <form method="get"  class="d-flex" style="margin-bottom: 10px;">-->
+<!--            <input type="text" name="query" placeholder="Search books and authors" class="w-100 form-control me-2">-->
+<!--            <button type="submit" class="btn btn-outline-success" id="ll">Search</button>-->
+<!--        </form>-->
+<!--        <button type="button" class="btn btn btn-warning" id="b" data-bs-target="#staticBack" data-bs-toggle="modal">Добавления</button>-->
+<!--    </div>-->
+<!--</center>-->
+
+<h1>Search Results</h1>
+
+<center>
+    <div class="d-flex flex-column align-items-center" style="width: 100%; margin-top: 20px;">
+        <!-- Контейнер для результатов поиска -->
+        <div class="search-results-container" style="width: 80%; background-color: #343a43; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+            <!-- Заголовок с результатами -->
+            {% if query %}
+                <h4 class="text-light text-center mb-4">Results for "<span style="color: #ffc107;">{{ query }}</span>"</h4>
+            {% else %}
+                <h4 class="text-light text-center mb-4">Search Results</h4>
+            {% endif %}
+
+            <!-- Список книг -->
+            <div class="d-flex flex-wrap justify-content-center">
+                {% for book in books %}
+                    <!-- Карточка одной книги -->
+                    <div class="card text-bg-dark m-2" style="width: 18rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                        <div class="card-body">
+                            <figure class="figure">
+                <img src="/media/{{ book.cover }}" class="figure-img img-fluid rounded" width="200" alt="dsadsa">
+                </figure>
+                            <h5 class="card-title text-warning">{{ book.name }}</h5>
+                            <p class="card-text">Category: <span style="color: #ffc107;">{{ book.category.name }}</span></p>
+                            <a href="/media/{{ book.book_pdf }}" download><button class="btn btn-success">Download</button></a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <!-- Если результатов нет -->
+                    <div class="text-center text-light mt-4">
+                        <p>No results found. Try searching for something else.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Пагинация -->
+            <div class="pagination-container text-center mt-4">
+                {% if page.has_previous %}
+                    <a class="btn btn-outline-warning m-2" href="?q={{ query }}&page={{ page.previous_page_number }}">Previous</a>
+                {% endif %}
+                {% if page.has_next %}
+                    <a class="btn btn-outline-warning m-2" href="?q={{ query }}&page={{ page.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</center>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var isLightTheme = localStorage.getItem('isLightTheme') === "true";
+  var bodyElement = document.querySelector('#body');
+  var bookElements = document.querySelectorAll('.book-element'); // Добавьте соответствующие классы для элементов книг
+
+  if (isLightTheme) {
+    bodyElement.style.backgroundColor = "rgb(255, 255, 204)";
+    bodyElement.style.color = "black";
+    bookElements.forEach(function(book) {
+      book.style.backgroundColor = "rgb(255, 255, 153)";
+    });
+  } else {
+    bodyElement.style.backgroundColor = "#212529";
+    bodyElement.style.color = "white";
+    bookElements.forEach(function(book) {
+      book.style.backgroundColor = "#343a43";
+    });
+  }
+});
+</script>
+
+{% endblock %}
+
+

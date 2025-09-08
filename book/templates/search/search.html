@@ -1,0 +1,122 @@
+{% extends 'book/index.html'%}
+
+{% block body %}
+<style>
+    input {
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+</style>
+
+
+
+<div class="modal fade" id="staticBack" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Добавить книгу</h5>
+        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form method="post" action="{% url 'add_graph' %}">
+              {% csrf_token %}
+              <label for="title">Название книг:</label>
+              <input type="text" name="title" required><br>
+
+              <label for="authors">Автор:</label>
+              <input type="text" name="authors" required><br>
+
+              <label for="language_code">Язык:</label>
+              <input type="text" name="language_code" required><br>
+
+              <label for="average_rating">Средний рейтинг:</label>
+              <input type="number" name="average_rating" step="0.01"><br>
+
+              <label for="num_pages">Количество страниц:</label>
+              <input type="number" name="num_pages" required><br>
+
+              <label for="ratings_count">Количество оценок:</label>
+              <input type="number" name="ratings_count" required><br>
+
+              <label for="text_reviews_count">Количество отзывов:</label>
+              <input type="number" name="text_reviews_count" required><br>
+
+              <label for="publication_date">Дата публикации:</label>
+              <input type="date" name="publication_date"><br><br>
+
+              <button type="submit" class="btn btn-success">Добавить</button>
+</form>
+      </div>
+    </div>
+  </div>
+</div>
+<h1>Search Results</h1>
+    {% if query %}
+        <p>Results for "{{ query }}"</p>
+    {% endif %}
+
+    <ul>
+    {% for book in page.object_list %}
+        <li>{{ book.name }} - {{ book.category.name }}</li>
+    {% empty %}
+        <p>No results found.</p>
+    {% endfor %}
+    </ul>
+
+    {% if page.has_next %}
+        <a href="?q={{ query }}&page={{ page.next_page_number }}">Next</a>
+    {% endif %}
+
+<!-- myapp/templates/search_results.html -->
+<center>
+    <div style="width: 50%;" class=" p-3 bg-grey rounded">
+<!--        <form method="get" action="{% url '" class="d-flex" style="margin-bottom: 10px;">-->
+<!--            <input type="text" name="query" placeholder="Search books and authors" class="w-100 form-control me-2">-->
+<!--            <button type="submit" class="btn btn-outline-success" id="ll">Search</button>-->
+<!--        </form>-->
+        <button type="button" class="btn btn btn-warning" id="b" data-bs-target="#staticBack" data-bs-toggle="modal">Добавления</button>
+    </div>
+</center>
+
+<!--<center>-->
+<!--    <div class="d-flex book-container shadow p-3 mb-5 rounded" style="width: 80%; height: auto; display: flex; justify-content: center; flex-wrap: wrap; background-color: #343a43; border-radius: 10px; padding: 20px;">-->
+<!--        {% for result in results %}-->
+<!--            <div class="book-element d-flex text-bg-dark p-2 shadow p-3 mb-5 bg-grey rounded border-dark" style="width: 30%; height: auto; background-color: rgba(0, 0, 0, .1); border-radius: 10px; margin: 10px;">-->
+<!--                <ul>-->
+<!--                    <h6 style="color: lightgreen;"><h7 style="color: lightred;"><{{ forloop.counter }}></h7>Author Name: {{ result.a.name }}</h6>-->
+<!--                    <li>Book Name: {{ result.b.title }}</li>-->
+<!--                    <li>Rating: {{ result.b.average_rating }}</li>-->
+<!--                    <lI>Num pages: {{ result.b.num_pages }}</lI>-->
+<!--                    <li>Date: {{ result.b.publication_date }}</li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        {% endfor %}-->
+<!--        <h3>{{ result }}<h3>-->
+<!--    </div>-->
+
+<!--</center>-->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var isLightTheme = localStorage.getItem('isLightTheme') === "true";
+  var bodyElement = document.querySelector('#body');
+  var bookElements = document.querySelectorAll('.book-element'); // Добавьте соответствующие классы для элементов книг
+
+  if (isLightTheme) {
+    bodyElement.style.backgroundColor = "rgb(255, 255, 204)";
+    bodyElement.style.color = "black";
+    bookElements.forEach(function(book) {
+      book.style.backgroundColor = "rgb(255, 255, 153)";
+    });
+  } else {
+    bodyElement.style.backgroundColor = "#212529";
+    bodyElement.style.color = "white";
+    bookElements.forEach(function(book) {
+      book.style.backgroundColor = "#343a43";
+    });
+  }
+});
+</script>
+
+{% endblock %}
+
+

@@ -1,0 +1,71 @@
+{% extends 'book/admin-page.html' %}
+{% load crispy_forms_tags %}
+{% block header %}
+    <header class="mb-auto w- h-5" >
+    <div>
+      <h2 class="float-md-start mb-0">Book-store</h2>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+        <a class="nav-link fw-bold py-1 px-0 active me-2" aria-current="page" href="{% url 'admin' %}" id="aa">Category-lists</a>
+        <a class="nav-link fw-bold py-1 px-0 active me-5" aria-current="page" href="{% url 'lists' %}" id="a">Book-lists</a>
+        <a href="{% url 'index' %}"><button type="button" class="btn-close bg-danger" aria-label="Close"></button></a>
+        </nav>
+    </div>
+    </header>
+{% endblock %}
+{% block body %}
+
+<!--input-->
+
+<h2>BOOKS</h2>
+    <center>
+        <div class="d-flex" style="width: 90%; height: auto; display: flex; justify-content: center; flex-wrap: wrap; background-color: #343a43; border-top-left-radius: 10px; border-top-right-radius: 10px; padding: 20px;">
+      <form action="/add-book/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ book_form }}
+          {% if test %}
+            <h2>{{ test }}</h2>
+        {% else %}
+            <button type="submit" class="btn btn-success">Send</button>
+        {% endif %}
+        </form>
+        </div>
+    </center>
+
+<!--spiska-->
+
+<center>
+<div class="d-flex mb-5" style="width: 90%; background-color: #343a43 color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" style="color: white; background-color: #343a43">ID</th>
+      <th scope="col" style="color: white; background-color: #343a43">Book name</th>
+      <th scope="col" style="color: white; background-color: #343a43">Category</th>
+      <th scope="col" style="color: white; background-color: #343a43">Pdf</th>
+      <th scope="col" style="color: white; background-color: #343a43">Button</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for i in book %}
+    <tr>
+      <th scope="row" style="color: white; background-color: #343a43">{{ forloop.counter }}</th>
+        <td style="color: white; background-color: #343a43">{{ i.name }}</td>
+        <td style="color: white; background-color: #343a43">{{ i.category }}</td>
+        <td style="color: white; background-color: #343a43">{{ i.book_pdf }}</td>
+        <td style="color: white; background-color: #343a43">
+          <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+          <form action="/delete-book/{{ i.id }}/" method="post">
+                  {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+              <a href="/media/{{ i.book_pdf }}" download><button type="button" class="btn btn-success">Download</button></a>
+</div>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+</center>
+
+{% endblock %}

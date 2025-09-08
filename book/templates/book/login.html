@@ -1,0 +1,37 @@
+{% extends 'book/index.html' %}
+{% block body %}
+<form action="{% url 'admin' %}" method="post">
+    <h2 style="font-family: cursive;">ADMIN PANEL</h2>
+    {% if error %}
+    <h3 style="color: red;">{{ error }}</h3>
+    {% endif %}
+    {% csrf_token %}
+    <h4>LOGIN</h4>
+    <input type="text" name="username" class="form-label"><br>
+    <h5>PASSWORD</h5>
+    <input type="password" name="password" class="inputPassword"><br><br>
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var isLightTheme = localStorage.getItem('isLightTheme') === "true";
+  var bodyElement = document.querySelector('#body');
+  var bookElements = document.querySelectorAll('.book-element'); // Добавьте соответствующие классы для элементов книг
+
+  if (isLightTheme) {
+    bodyElement.style.backgroundColor = "rgb(255, 255, 204)";
+    bodyElement.style.color = "black";
+    bookElements.forEach(function(book) {
+      book.style.backgroundColor = "rgb(255, 255, 153)";
+    });
+  } else {
+    bodyElement.style.backgroundColor = "#212529";
+    bodyElement.style.color = "white";
+    bookElements.forEach(function(book) {
+      book.style.backgroundColor = "#343a43";
+    });
+  }
+});
+</script>
+
+{% endblock %}
